@@ -291,8 +291,8 @@ The saved locked-test result is retained under `notebooks/results/` so the noteb
 
 `db/load_data.py` loads and verifies the experimental runs in PostgreSQL.
 
-## Notes on interpretation
+## Model interpretation
 
-The most important result of the exercise is not that a more complex model necessarily beats a simple baseline. In this dataset, persistence is difficult to improve on reliably at short forecast horizons.
+The Transformer was developed and evaluated as the forecasting model for this task, with persistence used as the benchmark for determining whether the learned multivariate temporal representation provided a reproducible forecasting improvement.
 
-The Transformer experiments are still useful because they test whether multivariate process history contains a residual signal that generalizes across experimental runs. Under the run-wise validation protocol used here, that improvement was not stable enough to adopt. The final system therefore preserves the more reliable predictor while retaining a reproducible Transformer implementation and deployment path.
+Across the run-wise validation experiments, the Transformer learned residual corrections to the persistence forecast, but the improvement was not consistent across held-out experimental runs. The development-only selection procedure therefore selected the zero-correction checkpoint for the final locked evaluation. This result reflects the strong short-term persistence of the CO2 profiles and the limited cross-run transfer of the learned corrections, rather than replacing the Transformer analysis with a separate post-hoc model.
