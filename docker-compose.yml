@@ -1,0 +1,54 @@
+# One-command setup:  docker compose up --build
+# Needs the eight run files (xlsx) in ./data/raw (not shipped in the repo).
+
+x-app: &app
+  build: .
+  image: co2-forecast
+  environment:
+    DATABASE_URL: postgresql://co2:co2@db:5432/co2
+
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: co2
+      POSTGRES_PASSWORD: co2
+      POSTGRES_DB: co2
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./db/init.sql:/docker-entrypoint-initdb.d/01-init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U co2 -d co2"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+
+  loader:
+    <<: *app
+    command: ["python", "db/load_data.py", "--wait", "60"]
+    volumes:
+      - ./data/raw:/app/data/raw:ro
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: "no"
+
+  api:
+    <<: *app
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+      loader:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+
+volumes:
+  pgdata:

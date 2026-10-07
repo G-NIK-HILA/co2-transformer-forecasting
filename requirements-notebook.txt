@@ -1,0 +1,5 @@
+# Extra packages only needed to re-run notebooks/01_data_exploration.ipynb
+-r requirements.txt
+matplotlib==3.9.4
+seaborn==0.13.2
+ipykernel==6.31.0

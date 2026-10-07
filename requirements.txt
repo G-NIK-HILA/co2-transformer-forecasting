@@ -1,0 +1,15 @@
+# Runtime dependencies for the data loader, forecasting service and API.
+# The Dockerfile installs torch first with the PyTorch CPU wheel index available;
+# the Linux arm64 torch wheel used on this Mac deployment is CPU-only.
+# The pin below also keeps a plain "pip install -r requirements.txt" complete.
+numpy==1.26.4
+pandas==2.3.3
+scikit-learn==1.6.1
+scipy==1.13.1
+torch==2.2.2
+openpyxl==3.1.5
+psycopg2-binary==2.9.12
+fastapi==0.115.6
+uvicorn==0.34.0
+pydantic==2.13.5
+httpx==0.28.1

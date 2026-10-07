@@ -1,0 +1,25 @@
+# Python environments
+.venv/
+
+# Python cache files
+__pycache__/
+*.pyc
+
+# Jupyter
+.ipynb_checkpoints/
+
+# macOS
+.DS_Store
+
+# Raw source data
+data/raw/
+*.xlsx
+
+# Binary experiment outputs
+*.pkl
+
+# Frozen held-out result used by the finalized notebook
+!notebooks/results/locked_test_FINAL_L6_h6.pkl
+
+# Local review/archive files
+AI-Challenge-review.zip
